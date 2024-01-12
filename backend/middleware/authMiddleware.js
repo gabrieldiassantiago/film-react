@@ -4,6 +4,9 @@ const config = require('../config/config');
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
 
+  console.log('Incoming Request Headers:', req.headers);
+  console.log('Token:', token);
+
   if (!token) {
     return res.status(401).json({ error: 'Token de autenticação não fornecido' });
   }

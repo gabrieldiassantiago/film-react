@@ -2,7 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const config = require('../config/config');
-const authMiddleware = require('../middleware/authMiddleware'); // Importe seu middleware de autenticação
+const authMiddleware = require('../middleware/authMiddleware');
+require('dotenv').config();
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ password, email });
 
     if (user) {
-      const token = jwt.sign({ 
+      const token = jwt.sign({
         username: user.username,
         email: user.email,
       }, config.jwtSecret, { expiresIn: '1h' });
@@ -28,12 +29,27 @@ router.post('/login', async (req, res) => {
 
 router.get('/user-data', authMiddleware, async (req, res) => {
   try {
-    const userData = { username: req.user.username, 
-      email: req.user.email };
+    const userData = { username: req.user.username, email: req.user.email };
     res.json(userData);
   } catch (error) {
     console.error('Erro ao obter dados do usuário:', error.message);
     res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+router.get('/movies', authMiddleware,  async (req, res) => {
+  try {
+    const apiKey = '9772ebae19e854dd86f2d89c7089351c';
+    const apiUrl = 'https://api.themoviedb.org/3/movie/popular'; 
+
+    const response = await fetch(`${apiUrl}?api_key=${apiKey}`);
+    const movies = await response.json();
+    console.log('Dados dos filmes:', movies);
+
+    res.json(movies.results);
+  } catch (error) {
+    console.error('Erro ao obter dados de filmes:', error.message);
+    res.status(error.status || 500).json({ error: 'Erro ao obter dados de filmes' });
   }
 });
 
@@ -51,7 +67,10 @@ router.post('/register', async (req, res) => {
 
     await newUser.save();
 
-    const token = jwt.sign({ username: newUser.username }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({
+      username: newUser.username,
+      email: newUser.email,
+    }, config.jwtSecret, { expiresIn: '1h' });
 
     res.json({ token });
   } catch (error) {

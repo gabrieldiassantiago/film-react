@@ -21,8 +21,7 @@ mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: t
   app.use(cors());
 
 
-// Adicione as rotas de autenticação
-app.use('/api/auth', authRoutes);
+app.use('/api/', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

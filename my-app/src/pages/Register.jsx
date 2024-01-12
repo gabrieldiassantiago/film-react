@@ -1,20 +1,23 @@
 // Register.jsx
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
 import fundo from '../images/fundo.png';
 import Header from '../components/header';
 import CheckAuthToken from '../utils/checkauth';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false); // Novo estado
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://localhost:3001/api/auth/register', {
+    setIsLoading(true);
+
+    const response = await fetch('http://localhost:3001/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,19 +25,15 @@ function Register() {
       body: JSON.stringify({ email, password, username }),
     });
 
-    // Se a requisição foi bem-sucedida, trate a resposta
-    if (response.ok) {
-      const data = await response.json();
-
-      // Armazene o token nos cookies
-      Cookies.set('authToken', data.token, { expires: 1 });
-
-      console.log('Token recebido e armazenado nos cookies:', data.token);
-      alert('deu certo')
-    } else {
-      const errorData = await response.json();
-      console.error('Erro ao registrar usuário:', errorData.error);
-    }
+    setTimeout(() => {
+      if (response.ok) {
+        navigate('/dashboard');
+      } else {
+        const errorData = response.json();
+        console.error('Erro ao registrar usuário:', errorData.error);
+      }
+      setIsLoading(false);
+    }, 3000);
   };
 
   return (
@@ -98,10 +97,12 @@ function Register() {
               />
             </div>
             <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ${isLoading ? 
+                'opacity-50 cursor-not-allowed' : ''}`}
               type="submit"
+              disabled={isLoading}
             >
-              Registrar
+              {isLoading ? 'Registrando...' : 'Registrar'}
             </button>
           </form>
         </div>

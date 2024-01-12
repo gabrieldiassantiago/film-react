@@ -3,7 +3,7 @@ import world from '../../images/world.svg';
 import persona from '../../images/persona.svg';
 
 
-function Header() {
+function Header({ isAuthenticated }) {
     const handleCriarContaClick = () => {
         // Redirecionar para a rota de registro
         window.location.href = '/register';
@@ -34,9 +34,14 @@ function Header() {
                         </button>
 
                         <div className="hidden lg:flex lg:items-center lg:w-auto lg:space-x-10" id="mobile-menu-2">
-                            <button className="border-2 cursor-pointer text-white p-2 rounded-2xl flex gap-3"><img src={world} alt="" /> English</button>
-                            <button onClick={handleCriarContaClick} className="bg-white cursor-pointer text-black font-bold p-2 rounded-2xl flex gap-3"><img src={persona}  alt="" /> Criar conta</button>
-                        </div>
+                        <button className="border-2 cursor-pointer text-white p-2 rounded-2xl flex gap-3"><img src={world} alt="" /> English</button>
+                        { !isAuthenticated && (
+                    <button onClick={handleCriarContaClick}
+                     className="bg-white cursor-pointer text-black font-bold p-2 rounded-2xl flex gap-3">
+                        <img src={persona}  alt="" /> Criar conta
+                    </button>
+                     )}
+                    </div>
                     </div>
                 </nav>
             </header>
