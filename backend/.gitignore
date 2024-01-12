@@ -1,0 +1,3 @@
+# .gitignore (na raiz do projeto)
+node_modules/
+config.js
