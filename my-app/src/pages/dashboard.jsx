@@ -50,7 +50,6 @@ function Dashboard() {
         return;
       }
 
-
       const apiUrl = 'https://api.themoviedb.org/3/search/movie';
       const apiKey = '9772ebae19e854dd86f2d89c7089351c';
 
