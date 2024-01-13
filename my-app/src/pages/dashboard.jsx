@@ -8,6 +8,7 @@ function Dashboard() {
   const [userData, setUserData] = useState(null);
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+
   const navigate = useNavigate();
 
   const fetchUserData = async () => {
@@ -17,7 +18,6 @@ function Dashboard() {
       if (!authToken) {
         console.error('Token de autenticação não encontrado nos cookies.');
         navigate('/signup');
-        alert('deslogado');
         return;
       }
 
@@ -47,12 +47,12 @@ function Dashboard() {
       if (!authToken) {
         console.error('Token de autenticação não encontrado nos cookies.');
         navigate('/signup');
-        alert('deslogado');
         return;
       }
 
+
       const apiUrl = 'https://api.themoviedb.org/3/search/movie';
-      const apiKey = '9772ebae19e854dd86f2d89c7089351c'; 
+      const apiKey = '9772ebae19e854dd86f2d89c7089351c';
 
       const response = await fetch(`${apiUrl}?query=${encodeURIComponent(searchTerm)}&api_key=${apiKey}`, {
         method: 'GET',
@@ -79,8 +79,27 @@ function Dashboard() {
   };
 
   useEffect(() => {
+    const authToken = Cookies.get('authToken');
+
+    if (!authToken || isTokenExpired(authToken)) {
+      navigate('/signup');
+      return;
+    }
+
     fetchUserData();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+
+  const isTokenExpired = (token) => {
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the payload
+      const currentTimestamp = Math.floor(Date.now() / 1000);
+      return decodedToken.exp <= currentTimestamp;
+    } catch (error) {
+      console.error('Erro ao decodificar o token:', error);
+      return true; // Em caso de erro, considere o token como expirado
+    }
+  };
   return (
     <div className='relative h-screen flex flex-col'>
       <Header isAuthenticated={userData !== null} />
@@ -106,6 +125,7 @@ function Dashboard() {
                 <button type="submit" className='bg-indigo-500 text-white p-2 m-2 rounded-xl focus:outline-none hover:bg-indigo-700'>
                   Pesquisar
                 </button>
+
               </form>
             </div>
           </div>
@@ -117,7 +137,7 @@ function Dashboard() {
               <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
             ) : (
               <div className="no-image-placeholder">
-                <p>Image not available</p>
+                <p>Imagem não</p>
               </div>
             )}
             <h2 className='text-xl font-semibold'>{movie.title}</h2>

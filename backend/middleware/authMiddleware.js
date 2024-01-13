@@ -17,9 +17,13 @@ module.exports = (req, res, next) => {
       return res.status(401).json({ error: 'Token de autenticação inválido' });
     }
 
-    req.user = decoded;
-    console.log('Decoded Token:', decoded); // Log the decoded token
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    if (decoded.exp <= currentTimestamp) {
+      return res.status(401).json({ error: 'Token de autenticação expirado' });
+    }
 
+    req.user = decoded;
+    console.log('Decoded Token:', decoded); 
     next();
   });
 };

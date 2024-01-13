@@ -37,6 +37,38 @@ router.get('/user-data', authMiddleware, async (req, res) => {
   }
 });
 
+
+router.put('/update-profile', authMiddleware, async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    const userId = req.user.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { username, email }, { new: true });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar o perfil do usuário:', error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+router.put('/update-password', authMiddleware, async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: 'Senha atualizada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao atualizar a senha do usuário:', error.message);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 router.get('/movies', authMiddleware,  async (req, res) => {
   try {
     const apiKey = '9772ebae19e854dd86f2d89c7089351c';
