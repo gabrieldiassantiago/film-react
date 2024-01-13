@@ -44,15 +44,10 @@ function Signup() {
   };
 
   return (
-    <div className="relative h-screen flex flex-col">
-      <img
-        className="absolute inset-0 w-full h-full object-cover opacity-70 -z-40"
-        src={fundo}
-        alt=""
-      />
+    <div className="relative h-screen flex flex-col fundo">
       <Header />
 
-      <div className="flex flex-col items-center justify-start flex-grow text-white z-10">
+      <div className="flex flex-col items-center justify-start flex-grow text-white z-10 ">
       <CheckAuthToken />
         <div className="bg-gray-800 p-8 rounded-md shadow-md w-96 mt-48">
           <h2 className="text-3xl font-bold mb-4 text-white">Login</h2>

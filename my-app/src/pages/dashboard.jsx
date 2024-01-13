@@ -97,11 +97,11 @@ function Dashboard() {
       return decodedToken.exp <= currentTimestamp;
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
-      return true; // Em caso de erro, considere o token como expirado
+      return true; 
     }
   };
   return (
-    <div className='relative h-screen flex flex-col'>
+    <div className='relative h-screen flex flex-col fundo'>
       <Header isAuthenticated={userData !== null} />
 
       {userData ? (

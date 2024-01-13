@@ -7,12 +7,8 @@ import Header from '../components/header';
 const Home = () => {
   
     return (
-        <div className="relative h-screen flex flex-col">
-            <img
-                className="absolute inset-0 w-full h-full object-cover opacity-70 -z-40"
-                src={fundo}
-                alt=""
-            />
+        <div className="relative h-screen flex flex-col fundo">
+           
             <Header />
 
             <div className="flex flex-col items-center justify-center flex-grow text-center text-white z-10">

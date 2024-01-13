@@ -37,12 +37,8 @@ function Register() {
   };
 
   return (
-    <div className="relative h-screen flex flex-col">
-      <img
-        className="absolute inset-0 w-full h-full object-cover opacity-70 -z-40"
-        src={fundo}
-        alt=""
-      />
+    <div className="relative h-screen flex flex-col fundo">
+      
       <Header />
 
       <div className="flex flex-col items-center justify-start flex-grow text-white z-10">
